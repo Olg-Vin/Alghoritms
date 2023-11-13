@@ -1,126 +1,164 @@
 package Tree;
 
-import lombok.Getter;
 
-import java.util.ArrayDeque;
-import java.util.List;
-import java.util.Queue;
+import lombok.NoArgsConstructor;
+
+import java.util.*;
 import java.util.function.Consumer;
 
-@Getter
-public class BinaryTree<E extends Comparable<E>> implements AbstractBinaryTree<E> {
-    private Node<E> rootNode; // root node
-    private Node<E> currentNode; // current node
-    int size = 0; // size of tree
-    int height = 0; // height of tree
-    StringBuilder stringBuilder = new StringBuilder();
+@NoArgsConstructor
+public class BinaryTree<E> implements AbstractBinaryTree<E>{
+    private E key;
+    private BinaryTree<E> left;
+    private BinaryTree<E> right;
 
-    public BinaryTree() { // Пустое дерево
-        this.rootNode = null;
-    } // create new empty tree
-
-    public BinaryTree(Node<E> node) {
-        this.rootNode = node;
-        this.currentNode = node;
+    public BinaryTree(E key) {
+        this.key = key;
+        this.left = null;
+        this.right = null;
     }
-
+    void printTree(BinaryTree<E> binaryTree, int level) {
+        if (binaryTree == null)
+            return;
+        printTree(binaryTree.right, level + 1);
+        for (int i = 0; i < level; i++)
+            System.out.print("   ");
+        System.out.println(binaryTree.getKey());
+        printTree(binaryTree.left, level + 1);
+    }
     @Override
     public E getKey() {
-        if (currentNode == null){
-            return null;
-        }
-        return currentNode.getValue();
+        return this.key;
     }
 
     @Override
     public AbstractBinaryTree<E> getLeft() {
-        if (rootNode.getLeft() == null){
-            return null;
-        }
-        return new BinaryTree<>(rootNode.getLeft());
+        return this.left;
     }
 
     @Override
     public AbstractBinaryTree<E> getRight() {
-        if (rootNode.getRight() == null){
-            return null;
-        }
-        return new BinaryTree<>(rootNode.getRight());
+        return this.right;
     }
 
     @Override
     public void setKey(E key) {
-        rootNode = sortInsertIn(rootNode, key);
+        BinaryTree<E> binaryTree = new BinaryTree<>(key);
+        if (this.left == null) {
+            this.left = binaryTree;
+        } else if (this.right == null) {
+            this.right = binaryTree;
+        } else {
+            if (Math.random() < 0.5) { // рандомный выбор в какую сторону вставлять новое поддерево
+                this.left.setKey(key);
+            } else {
+                this.right.setKey(key);
+            }
+        }
     }
 
     @Override
-    public String asIndentedPreOrder(int indent) {
-        Queue<Node<E>> newQueue = new ArrayDeque<>();
-        newQueue.add(rootNode);
-        recursiveBFS(newQueue, indent);
+    public String asIndentedPreOrder(int indent) { // BFS
+        StringBuilder stringBuilder = new StringBuilder();
+        Queue<BinaryTree<E>> queue = new ArrayDeque<>();
+        queue.add(this);
+
+        stringBuilder.append(recursionBFS(queue,indent));
         return stringBuilder.toString();
     }
-
-    public void recursiveBFS(Queue<Node<E>> queue, int n) {
+    private String recursionBFS(Queue<BinaryTree<E>> queue, int indent){
         if (queue.isEmpty()){
-            return;
+            return "";
         }
-        Queue<Node<E>> newQueue = new ArrayDeque<>();
+        StringBuilder stringBuilder = new StringBuilder();
+        Queue<BinaryTree<E>> newQueue = new ArrayDeque<>();
         while (!queue.isEmpty()) {
-            if (queue.peek().getLeft() != null){
-                newQueue.add(queue.peek().getLeft());
+            BinaryTree<E> current = queue.poll();
+            stringBuilder.append(current.key).append(" ");
+            if (current.left != null) {
+                newQueue.add(current.left);
             }
-            if (queue.peek().getRight() != null){
-                newQueue.add(queue.peek().getRight());
+            if (current.right != null) {
+                newQueue.add(current.right);
             }
-            stringBuilder.append(queue.poll().getValue()).append(" ");
         }
         stringBuilder.append("\n");
-        for (int i = 0; i < n; i++) {
-            stringBuilder.append(" ");
-        }
-        recursiveBFS(newQueue, n * 2);
+        stringBuilder.append(" ".repeat(Math.max(0, indent)));
+        return stringBuilder.append(recursionBFS(newQueue,indent*2)).toString();
     }
 
     @Override
     public List<AbstractBinaryTree<E>> preOrder() {
-
-        return null;
+        List<AbstractBinaryTree<E>> list = new ArrayList<>();
+        list.add(this);  // Добавляем текущий узел в список
+        if (this.left != null) {
+            list.addAll(this.left.preOrder());  // Обход левого поддерева и добавление его элементов в список
+        }
+        if (this.right != null) {
+            list.addAll(this.right.preOrder());  // Обход правого поддерева и добавление его элементов в список
+        }
+        return list;
     }
-
     @Override
     public List<AbstractBinaryTree<E>> inOrder() {
-        return null;
+        List<AbstractBinaryTree<E>> list = new ArrayList<>();
+        if (this.left != null) {
+            list.addAll(this.left.inOrder());  // Обход левого поддерева и добавление его элементов в список
+        }
+        list.add(this);  // Добавляем текущий узел в список
+        if (this.right != null) {
+            list.addAll(this.right.inOrder());  // Обход правого поддерева и добавление его элементов в список
+        }
+        return list;
     }
 
     @Override
     public List<AbstractBinaryTree<E>> postOrder() {
-        return null;
+        List<AbstractBinaryTree<E>> list = new ArrayList<>();
+        if (this.left != null) {
+            list.addAll(this.left.postOrder());  // Обход левого поддерева и добавление его элементов в список
+        }
+        if (this.right != null) {
+            list.addAll(this.right.postOrder());  // Обход правого поддерева и добавление его элементов в список
+        }
+        list.add(this);  // Добавляем текущий узел в список
+        return list;
+    }
+    @Override
+    public void forEachInOrder(Consumer<E> consumer) { // in order - означает в порядке возрастания и убывания?
+        if (left != null) {
+            left.forEachInOrder(consumer);
+        }
+        consumer.accept(key);
+        if (right != null) {
+            right.forEachInOrder(consumer);
+        }
     }
 
     @Override
-    public void forEachInOrder(Consumer<E> consumer) {
-
+    public void printBFS() {
+        Queue<BinaryTree<E>> queue = new ArrayDeque<>();
+        queue.add(this);
+        while (!queue.isEmpty()){
+            BinaryTree<E> current = queue.poll();
+            System.out.println(current.getKey() + " ");
+            if (current.left != null){
+                queue.add(current.left);
+            }
+            if (current.right != null){
+                queue.add(current.right);
+            }
+        }
     }
 
-    public Node<E> sortInsertIn(Node<E> current, E key) {
-        if (current == null){
-            return new Node<>(key);
+    @Override
+    public void printDFS() {
+        if (this.left != null){
+            this.left.printDFS();
         }
-        if (key.compareTo(current.getValue()) <= 0){
-            current.setLeft(sortInsertIn(current.getLeft(), key));
-        } else if (key.compareTo(current.getValue()) > 0){
-            current.setRight(sortInsertIn(current.getRight(), key));
+        if (this.right != null){
+            this.right.printDFS();
         }
-        return current;
-    }
-    public Node<E> insertIn(Node<E> current, E key){
-        Queue<Node<E>> nodes = new ArrayDeque<>();
-        nodes.add(rootNode);
-        while (!nodes.isEmpty()){
-
-        }
-        // TODO равномерная вставка без условия
-        return null;
+        System.out.println(this.getKey() + " ");
     }
 }

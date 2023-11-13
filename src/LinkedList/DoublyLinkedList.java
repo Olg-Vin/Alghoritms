@@ -6,14 +6,11 @@ public class DoublyLinkedList implements Iterable<Minion> {
     public Minion head;
     public Minion tail;
     public int size = 0;
-
     public DoublyLinkedList() {
     }
-
     public boolean isEmpty() {
         return head == null;
     }
-
     public void addLast(Minion minion) {
         if (isEmpty()){
             head = minion;
@@ -25,7 +22,6 @@ public class DoublyLinkedList implements Iterable<Minion> {
         }
         size++;
     }
-
     public void addFirst(Minion minion) {
         if (isEmpty()){
             head = minion;
@@ -37,19 +33,18 @@ public class DoublyLinkedList implements Iterable<Minion> {
         }
         size++;
     }
-
     public void addAt(Minion minion, int index) {
         try {
             if (isEmpty()){
                 head = minion;
                 tail = minion;
-            } else if (index == 1){
+            } else if (index == 0){
                 addFirst(minion);
-            } else if (index == size){
+            } else if (index == size-1){
                 addLast(minion);
             } else {
                 Minion current = head;
-                for (int i = 2; i <= index; i++) {
+                for (int i = 1; i <= index; i++) {
                     current = current.getNext();
                 }
                 minion.setNext(current);
@@ -62,7 +57,6 @@ public class DoublyLinkedList implements Iterable<Minion> {
             System.out.println("index " + index + " out of range in add");
         }
     }
-
     public void removeFirst() {
         try {
             if (isEmpty()){
@@ -76,7 +70,6 @@ public class DoublyLinkedList implements Iterable<Minion> {
             System.out.println(e.getMessage());
         }
     }
-
     public void removeLast() {
         try {
             if (isEmpty()){
@@ -90,18 +83,17 @@ public class DoublyLinkedList implements Iterable<Minion> {
             System.out.println(e.getMessage());
         }
     }
-
     public void removeAt(int index) {
         try {
             if (isEmpty()){
                 System.out.println("list is empty");
-            } else if (index == 1){
+            } else if (index == 0){
                 removeFirst();
-            } else if (index == size){
+            } else if (index == size-1){
                 removeLast();
             } else {
                 Minion current = head;
-                for (int i = 2; i <= index; i++) {
+                for (int i = 1; i <= index; i++) {
                     current = current.getNext();
                 }
                 current.getPrev().setNext(current.getNext());
@@ -114,7 +106,6 @@ public class DoublyLinkedList implements Iterable<Minion> {
             System.out.println("index " + index + " out of range in remove");
         }
     }
-
     public Minion getNode(int index) {
         try {
             Minion current = head;
@@ -127,28 +118,26 @@ public class DoublyLinkedList implements Iterable<Minion> {
         }
         return null;
     }
-
     public void update(Minion minion, int index) {
         if (index <= size){
             removeAt(index);
             size++;
             addAt(minion, index);
         }
-        System.out.println("index " + index + " out of range");
+        else {
+            System.out.println("index " + index + " out of range");
+        }
     }
-
     public void printList(Minion minion) {
         while (minion != null) {
             System.out.println(minion);
             minion = minion.getNext();
         }
     }
-
     @Override
     public Iterator iterator() {
         return new ListIterator<Object>(this.head, this.tail);
     }
-
     public List<Minion> sort()  {
         List<Minion> list = new ArrayList<>();
         for (Minion minion : this) {
@@ -161,7 +150,6 @@ public class DoublyLinkedList implements Iterable<Minion> {
 //        list.sort(new DoubleLinkedListComparator());
         return list;
     }
-
 }
 
 class ListIterator<T> implements Iterator<T> {
@@ -169,22 +157,18 @@ class ListIterator<T> implements Iterator<T> {
     Minion tail;
     Minion current;
     boolean reverse = false;
-
     public ListIterator(Minion head, Minion tail) {
         this.current = head;
         this.head = head;
         this.tail = tail;
     }
-
     @Override
     public boolean hasNext() {
         return current != null;
     }
-
     public boolean hasPrevious() {
         return current != null;
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public T next() {
@@ -192,14 +176,12 @@ class ListIterator<T> implements Iterator<T> {
         current = current.getNext();
         return (T) m;
     }
-
     @SuppressWarnings("unchecked")
     public T previous() {
         Minion m = current;
         current = current.getPrev();
         return (T) m;
     }
-
     public void reverse() {
         reverse = !reverse;
         if (reverse){
@@ -208,7 +190,6 @@ class ListIterator<T> implements Iterator<T> {
             current = head;
         }
     }
-
     @Override
     public void remove() {
         throw new UnsupportedOperationException();

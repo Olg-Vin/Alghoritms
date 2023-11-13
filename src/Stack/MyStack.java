@@ -5,7 +5,6 @@ import java.util.Iterator;
 public class MyStack<T> implements Iterable<T>{
     private int sizeOfStack;
     private Object[] arrayForStack;
-    
     MyStack(int size){
         this.sizeOfStack = 0; 
         this.arrayForStack = new Object[size];
@@ -14,7 +13,6 @@ public class MyStack<T> implements Iterable<T>{
         sizeOfStack--;
         arrayForStack[sizeOfStack] = null;
     }
-    
     public void push(T obj){
         if (sizeOfStack == arrayForStack.length-1){
             increaseSpace(this.arrayForStack);
@@ -29,7 +27,6 @@ public class MyStack<T> implements Iterable<T>{
     public boolean empty(){
         return sizeOfStack == 0;
     }
-
     public int size(){
         return this.sizeOfStack;
     }
@@ -38,7 +35,6 @@ public class MyStack<T> implements Iterable<T>{
         System.arraycopy(
         array, 0, arrayForStack, 0, array.length);
     }
-
     @Override
     public Iterator<T> iterator() {
         return new StackIterator<>(this.arrayForStack, sizeOfStack);
@@ -51,7 +47,6 @@ class StackIterator<T> implements Iterator<T> {
         arrayForIteration = stack;
         count = size;
     }
-
     @Override
     public boolean hasNext() {
         try {
@@ -61,14 +56,12 @@ class StackIterator<T> implements Iterator<T> {
             return false;
         }
     }
-
     @SuppressWarnings("unchecked")
     @Override
     public T next() {
         count--;
         return (T) arrayForIteration[count];
     }
-
     @Override
     public void remove() {
         throw new UnsupportedOperationException();

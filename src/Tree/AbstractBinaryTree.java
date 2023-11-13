@@ -3,7 +3,7 @@ package Tree;
 import java.util.List;
 import java.util.function.Consumer;
 
-public interface AbstractBinaryTree<E extends Comparable<E>> {
+public interface AbstractBinaryTree<E>{
     E getKey(); // return key of current node.
     AbstractBinaryTree<E>getLeft(); // return left under-the-tree
     AbstractBinaryTree<E>getRight(); // return right under-the-tree
@@ -13,5 +13,6 @@ public interface AbstractBinaryTree<E extends Comparable<E>> {
     List<AbstractBinaryTree<E>>inOrder(); // return tree as list in
     List<AbstractBinaryTree<E>>postOrder(); // return tree as list in
     void forEachInOrder(Consumer<E> consumer); // выполнение заданного действия для каждого узла в порядке симметричного обхода
-
+    void printBFS();
+    void printDFS();
 }
