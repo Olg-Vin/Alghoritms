@@ -56,7 +56,6 @@ public class BinaryTree<E> implements AbstractBinaryTree<E>{
             }
         }
     }
-
     @Override
     public String asIndentedPreOrder(int indent) { // BFS
         StringBuilder stringBuilder = new StringBuilder();
@@ -111,7 +110,6 @@ public class BinaryTree<E> implements AbstractBinaryTree<E>{
         }
         return list;
     }
-
     @Override
     public List<AbstractBinaryTree<E>> postOrder() {
         List<AbstractBinaryTree<E>> list = new ArrayList<>();
@@ -135,7 +133,6 @@ public class BinaryTree<E> implements AbstractBinaryTree<E>{
         }
     }
 
-    @Override
     public void printBFS() {
         Queue<BinaryTree<E>> queue = new ArrayDeque<>();
         queue.add(this);
@@ -150,8 +147,6 @@ public class BinaryTree<E> implements AbstractBinaryTree<E>{
             }
         }
     }
-
-    @Override
     public void printDFS() {
         if (this.left != null){
             this.left.printDFS();

@@ -13,6 +13,4 @@ public interface AbstractBinaryTree<E>{
     List<AbstractBinaryTree<E>>inOrder(); // return tree as list in
     List<AbstractBinaryTree<E>>postOrder(); // return tree as list in
     void forEachInOrder(Consumer<E> consumer); // выполнение заданного действия для каждого узла в порядке симметричного обхода
-    void printBFS();
-    void printDFS();
 }
